@@ -1,0 +1,146 @@
+{
+    "substraction_one": {
+        "value": "0.48 \\pm 0.07",
+        "mean": 0.48381705,
+        "std": 0.0684657678175561,
+        "max": 0.601451,
+        "min": 0.329129,
+        "count": 20
+    },
+    "eval_set_one2n_accu": {
+        "value": "0.99 \\pm 0.02",
+        "mean": 0.9863496932515338,
+        "std": 0.022844974895545288,
+        "max": 1.0,
+        "min": 0.9271472392638037,
+        "count": 20
+    },
+    "eval_set_one2one_accu": {
+        "value": "0.98 \\pm 0.03",
+        "mean": 0.9771280674846625,
+        "std": 0.03203541191053157,
+        "max": 1.0,
+        "min": 0.9102760736196319,
+        "count": 20
+    },
+    "eval_set_one2n_accu_cycle": {
+        "value": "1.0 \\pm 0.0",
+        "mean": 0.998734662576687,
+        "std": 0.002804851600134451,
+        "max": 1.0,
+        "min": 0.9888803680981595,
+        "count": 20
+    },
+    "eval_set_one2one_accu_cycle": {
+        "value": "1.0 \\pm 0.0",
+        "mean": 0.9983703987730062,
+        "std": 0.0035389982634154117,
+        "max": 1.0,
+        "min": 0.9877300613496932,
+        "count": 20
+    },
+    "eval_set_emb_select_accu": {
+        "value": "1.0 \\pm 0.01",
+        "mean": 0.9966449386503069,
+        "std": 0.007180464773793136,
+        "max": 1.0,
+        "min": 0.9723926380368099,
+        "count": 20
+    },
+    "eval_set_emb_select_accu_cycle": {
+        "value": "1.0 \\pm 0.01",
+        "mean": 0.9966449386503069,
+        "std": 0.007180464773793136,
+        "max": 1.0,
+        "min": 0.9723926380368099,
+        "count": 20
+    },
+    "eval_set_emb_self_consistency": {
+        "value": "0.98 \\pm 0.03",
+        "mean": 0.9783742331288343,
+        "std": 0.03170583368001423,
+        "max": 1.0,
+        "min": 0.910659509202454,
+        "count": 20
+    },
+    "eval_set_emb_label_consistency": {
+        "value": "1.0 \\pm 0.0",
+        "mean": 1.0,
+        "std": 0.0,
+        "max": 1.0,
+        "min": 1.0,
+        "count": 20
+    },
+    "eval_set_z_c_recognition_rate": {
+        "value": "0.99 \\pm 0.02",
+        "mean": 0.9869631901840489,
+        "std": 0.02238259029554641,
+        "max": 1.0,
+        "min": 0.9271472392638037,
+        "count": 20
+    },
+    "eval_set_z_c_cycle_recognition_rate": {
+        "value": "1.0 \\pm 0.0",
+        "mean": 0.9996740797546012,
+        "std": 0.0013352975574666983,
+        "max": 1.0,
+        "min": 0.9938650306748467,
+        "count": 20
+    },
+    "emb_matching_rate_one2n": {
+        "value": "1.0 \\pm 0.0",
+        "mean": 0.9994047619047619,
+        "std": 0.0025945827044884873,
+        "max": 1.0,
+        "min": 0.9880952380952381,
+        "count": 20
+    },
+    "emb_matching_rate_one2one": {
+        "value": "0.99 \\pm 0.02",
+        "mean": 0.9880952380952381,
+        "std": 0.017200218186666533,
+        "max": 1.0,
+        "min": 0.9255952380952381,
+        "count": 20
+    },
+    "orderliness": {
+        "value": "0.98 \\pm 0.02",
+        "mean": 0.983875,
+        "std": 0.021801304433450783,
+        "max": 1.0,
+        "min": 0.9250000000000002,
+        "count": 20
+    },
+    "train_interpolate_modedict": {
+        "value": "0.91 \\pm 0.09",
+        "mean": 0.9131904761904762,
+        "std": 0.09229759371180087,
+        "max": 1.0,
+        "min": 0.619047619047619,
+        "count": 20
+    },
+    "train_interpolate_cycle_modedict": {
+        "value": "0.95 \\pm 0.08",
+        "mean": 0.9498095238095239,
+        "std": 0.08402736839539712,
+        "max": 1.0,
+        "min": 0.7142857142857143,
+        "count": 20
+    },
+    "train_interpolate_selection": {
+        "value": "0.95 \\pm 0.09",
+        "mean": 0.9504285714285716,
+        "std": 0.08726453903644155,
+        "max": 1.0,
+        "min": 0.6952380952380953,
+        "count": 20
+    },
+    "train_interpolate_cycle_selection": {
+        "value": "0.95 \\pm 0.09",
+        "mean": 0.953857142857143,
+        "std": 0.08502499299092342,
+        "max": 1.0,
+        "min": 0.7142857142857143,
+        "count": 20
+    }
+}
