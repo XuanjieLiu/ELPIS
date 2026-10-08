@@ -76,10 +76,3 @@ Training, seen-icon evaluation and unseen-icon evaluation images are synthesized
 (excluding epoch 0) and summarizes all 20 runs. The paper's converged-run filter and
 three-group Table S2 export are not implemented by this entry point.
 
-## Coverage boundaries
-
-- Fig. 2B's resampled training-ratio sweep is not among these 24 configs.
-- Random-representation / random-guess baselines are not wired into the documented workflow.
-- Historical HM/DM, sampling and subtraction-summary conventions are preserved by
-  the naming refactor. Their alignment with the manuscript is a separate pending task.
-- The four excluded Mahjong runs are not part of this release.
