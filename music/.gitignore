@@ -1,0 +1,20 @@
+.vscode/
+__pycache__/
+*/__pycache__/
+/logs/
+**/logs/
+/wandb/
+**/wandb/
+*.pt
+# Bundled pitch-classifier weights are required by evaluation.
+!/mel_cnn_pitch_classifier.pt
+*.swp
+*.swo
+*.png
+*.pdf
+*.csv
+# *.mid
+*.svg
+*.gif
+*.wav
+*.sh

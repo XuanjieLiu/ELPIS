@@ -335,7 +335,7 @@ def test_two_dim_vis():
     single_img_eval_set = SingleImgDataset(DATASET_PATH)
     single_img_eval_loader = DataLoader(single_img_eval_set, batch_size=256)
     evaler = MumEval(t_config.CONFIG, model_path)
-    evaler.num_eval_two_dim(single_img_eval_loader, result_path="C:/Users/Lxj/Downloads/aa.png")
+    evaler.num_eval_two_dim(single_img_eval_loader, result_path="two_dim_num.png")
 
 
 if __name__ == "__main__":

@@ -234,16 +234,3 @@ def init_test_online_synth_dataloaders_paired(num_samples,
     ood_loader = DataLoader(ood_dataset, batch_size=128, shuffle=False)
     return val_loader, ood_loader
 # -------------------------------------------------------------------------------------
-
-if __name__ == "__main__":
-    n_samples = 16
-    dataset_dir_1 = "/l/users/xuanjie.liu/S3Plus/LM_align/synthData/test_export_dataset_1"
-    dataset_dir_2 = "/l/users/xuanjie.liu/S3Plus/LM_align/synthData/test_export_dataset_2"
-    os.makedirs(dataset_dir_1, exist_ok=True)
-    os.makedirs(dataset_dir_2, exist_ok=True)
-    val_loader_1, ood_loader_1 = init_test_online_synth_dataloaders(n_samples)
-    val_loader_2, ood_loader_2 = init_test_online_synth_dataloaders_paired(n_samples)
-    export_dataloader_to_dir(val_loader_1, os.path.join(dataset_dir_1, "val"))
-    export_dataloader_to_dir(ood_loader_1, os.path.join(dataset_dir_1, "ood"))
-    export_dataloader_to_dir(val_loader_2, os.path.join(dataset_dir_2, "val"))
-    export_dataloader_to_dir(ood_loader_2, os.path.join(dataset_dir_2, "ood"))

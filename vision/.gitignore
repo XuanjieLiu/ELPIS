@@ -9,3 +9,5 @@ slurm-*.err
 /LM_align/exp/*/all_results*.json
 /LM_align/exp/*/wandb/
 /wandb/
+# Downloaded automatically into the PyTorch cache; do not vendor DINO weights.
+/LM_align/checkpoints/dino_deitsmall8_pretrain*.pth

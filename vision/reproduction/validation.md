@@ -1,6 +1,6 @@
 # Validation scope
 
-The following checks have been completed on SLURM compute nodes:
+The following checks have been completed using a CUDA GPU:
 
 - One optimizer update for representatives covering the visual training datasets,
   including blurred inputs; temporary outputs were removed.
@@ -14,6 +14,9 @@ The following checks have been completed on SLURM compute nodes:
   naming changes.
 - Icon-alignment model loading and forward computation, plus statistics aggregation
   using controlled log fixtures.
+- DINO automatic download and cache reuse. The downloaded file's full SHA-256,
+  loaded model weights and a forward pass match the original bundled checkpoint;
+  explicit local checkpoint paths remain supported.
 - Original image checksums, regenerated image pixels and archive extraction.
   See [data verification results](data/generation_validation.json).
 

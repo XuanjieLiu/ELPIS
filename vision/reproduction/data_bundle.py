@@ -14,11 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 METADATA = ROOT / 'reproduction/data'
 
 
-def require_compute_step():
-    if not os.environ.get('SLURM_JOB_ID') or not os.environ.get('SLURM_STEP_ID'):
-        raise RuntimeError('Run this command inside a SLURM srun job step.')
-
-
 def expected_files():
     result = {}
     for line in (METADATA / 'files.sha256').read_text().splitlines():
@@ -172,7 +167,6 @@ def main():
     render = commands.add_parser('regenerate', help='Redraw fixed data using archived split membership.')
     render.add_argument('--output', type=Path, required=True, help='A new directory; existing directories are rejected.')
     args = parser.parse_args()
-    require_compute_step()
     if args.command == 'verify':
         report = verify(args.data_root.resolve(), args.pixels)
         print(json.dumps(report, indent=2))

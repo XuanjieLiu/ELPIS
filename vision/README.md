@@ -12,29 +12,24 @@ icon-alignment experiments. Configurations use short experiment names such as
 - [Configuration naming](CONFIGURATION.md): renamed fields and compatibility.
 - [Validation record](reproduction/validation.md): what has actually been tested.
 
-## Quick start on this cluster
+## Quick start
 
-Run these submission commands from `ELPIS/vision`. Project Python commands must
-run on a compute node through SLURM, including smoke checks and syntax checks.
-The wrapper uses an inner `srun`; `salloc` alone is insufficient.
+Run the following commands from `ELPIS/vision` after environment setup.
+A CUDA GPU is required for the smoke check.
 
 ```bash
 # One optimizer update, with automatic removal of temporary outputs.
-sbatch common_gpu_py.sbatch VQ/batch_train.py dots_elpis --smoke-test
+python VQ/batch_train.py dots_elpis --smoke-test
 
 # Full workflow for one experiment group; wait for each stage to finish.
-sbatch common_gpu_py.sbatch VQ/batch_train.py dots_elpis
-sbatch common_gpu_py.sbatch VQ/batch_other_task_eval.py dots_elpis
-sbatch common_gpu_py.sbatch VQ/eval_pipeline.py dots_elpis
+python VQ/batch_train.py dots_elpis
+python VQ/batch_other_task_eval.py dots_elpis
+python VQ/eval_pipeline.py dots_elpis
 ```
 
-The last three commands depend on preceding outputs. See the guide for automatic
-SLURM dependencies. Full training runs all 20 repetitions and can outlast a single
-allocation. A smoke check establishes executability, not final paper accuracy.
-
-The wrapper defaults to partition `ws-ia`, one RTX 5000 Ada GPU, 32 GB RAM and
-conda environment `xuanjie`. Set `ELPIS_CONDA_ENV` and optionally `ELPIS_CONDA_SH`
-to use a different environment. Other clusters should adapt the resource directives.
+The last three commands depend on preceding outputs; run them in order.
+Full training runs all 20 repetitions. A smoke check establishes executability,
+not final paper accuracy. See the reproduction guide for setup and outputs.
 
 ## Repository contents
 
@@ -48,7 +43,7 @@ to use a different environment. Other clusters should adapt the resource directi
 | `LM_align/batch_train.py` | Icon-adaptation training |
 | `LM_align/statistic_batch.py` | Aggregation of existing training/seen/OOD records |
 | `dataset/` | The 14 bundled numerical image datasets |
-| `LM_align/checkpoints/` | DINO weights and the fixed VQ model used for adaptation |
+| `LM_align/checkpoints/` | The fixed VQ model used for adaptation |
 | `reproduction/` | Run lists, alias maps, asset lists and validation scope |
 
 Dataset paths are repository-relative. S3Plus is not needed at runtime. Historical

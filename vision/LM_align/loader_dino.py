@@ -2,15 +2,16 @@ import torch
 from torchvision import transforms
 from timm.models.vision_transformer import VisionTransformer
 from shared import DEVICE
-import os
 
-# Path to your DINO checkpoint
-dino_checkpoint_root = '{}{}'.format(os.path.dirname(os.path.abspath(__file__)), '/checkpoints/')
-dino_checkpoint_name = "dino_deitsmall8_pretrain.pth"
-dino_checkpoint_path = os.path.join(dino_checkpoint_root, dino_checkpoint_name)
+DINO_URL = (
+    "https://dl.fbaipublicfiles.com/dino/"
+    "dino_deitsmall8_pretrain/dino_deitsmall8_pretrain.pth"
+)
+# Pin the official checkpoint to the weights used by the retained experiments.
+DINO_CACHE_NAME = "dino_deitsmall8_pretrain-55c8b267.pth"
 
 # Define a function to load the DINO model
-def load_dino_vit_s8(checkpoint_path=dino_checkpoint_path):
+def load_dino_vit_s8(checkpoint_path=None):
     # Load the ViT-S/8 model structure
     model = VisionTransformer(
         img_size=224,  # DINO typically trains on 224x224 images
@@ -22,7 +23,13 @@ def load_dino_vit_s8(checkpoint_path=dino_checkpoint_path):
     )
 
     # Load the checkpoint
-    checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
+    if checkpoint_path is None:
+        checkpoint = torch.hub.load_state_dict_from_url(
+            DINO_URL, map_location=DEVICE, file_name=DINO_CACHE_NAME,
+            check_hash=True,
+        )
+    else:
+        checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
     state_dict = checkpoint.get("teacher", checkpoint)  # DINO checkpoints usually store the teacher's state dict
 
     # Remove `module.` prefix from keys if it exists
@@ -60,7 +67,7 @@ def evaluate_images(model, dataloader):
 if __name__ == "__main__":
     # Load the DINO model
     # Load your DINO model
-    model = load_dino_vit_s8(dino_checkpoint_path)
+    model = load_dino_vit_s8()
     print("DINO model loaded successfully!")
 
     # Load your dataset

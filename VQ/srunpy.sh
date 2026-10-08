@@ -1,1 +1,0 @@
-srun --jobid=$JOBID --pty python "$@"

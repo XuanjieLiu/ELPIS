@@ -2,7 +2,6 @@
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 import random
 import sys
@@ -17,8 +16,6 @@ def main():
     parser.add_argument('--samples', type=int, default=256)
     parser.add_argument('--split', choices=['seen', 'unseen'], required=True)
     args = parser.parse_args()
-    if not os.environ.get('SLURM_JOB_ID') or not os.environ.get('SLURM_STEP_ID'):
-        raise RuntimeError('Run icon generation inside a SLURM srun job step.')
     if args.samples < 1:
         parser.error('--samples must be positive')
     sys.path.insert(0, str(ROOT))

@@ -12,10 +12,8 @@ from visual_imgs import VisImgs
 
 
 def smoke_train_step(config, run_name):
-    if not os.environ.get('SLURM_JOB_ID') or not os.environ.get('SLURM_STEP_ID'):
-        raise RuntimeError('Run smoke tests inside an srun job step.')
     if not torch.cuda.is_available():
-        raise RuntimeError('The allocated GPU is not visible inside this job step.')
+        raise RuntimeError('A CUDA GPU is required for this smoke check.')
 
     previous_dir = os.getcwd()
     with TemporaryDirectory(prefix='elpis-smoke-') as work_dir:

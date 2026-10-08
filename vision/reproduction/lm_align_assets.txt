@@ -1,3 +1,2 @@
-LM_align/checkpoints/dino_deitsmall8_pretrain.pth
 LM_align/checkpoints/vqsps/dots_elpis/1/checkpoint_48000.pt
 LM_align/synthData/fonts/seguiemj.ttf

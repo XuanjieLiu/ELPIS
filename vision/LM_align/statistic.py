@@ -106,18 +106,3 @@ def get_metrics_by_epoch(record_path: str, epoch_num: int, key_list: List[str]) 
     raise ValueError(f"日志文件 {record_path} 中未找到 epoch {epoch_num}")
 
 # 使用示例
-if __name__ == "__main__":
-    # test find_best_epoch
-    file_path = "D:\Projects\Gus Xia\S3Plus\LM_align\exp/2025.8.30\Train_record.txt"
-    metric_name = "plus_loss"
-    larger_is_better = False  # loss 越小越好，accuracy 越大越好
-    best_epoch = find_best_epoch(file_path, metric_name, larger_is_better)
-    print(f"{metric_name} 最佳的 epoch 是: {best_epoch}")
-
-    # test get_metrics_by_epoch
-    record_path = "D:\Projects\Gus Xia\S3Plus\LM_align\exp/2025.8.30\Train_record.txt"
-    epoch_num = best_epoch
-    key_list = ["all_loss", "accuracy", "collapse_loss"]
-
-    result = get_metrics_by_epoch(record_path, epoch_num, key_list)
-    print(result)

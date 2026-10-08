@@ -1,9 +1,7 @@
 # Reproducing the numerical experiments
 
-Commands in this guide are submitted from `ELPIS/vision`. On this cluster, every
-project Python command must run in a SLURM `srun` step. This includes imports,
-unit tests, syntax checks, dataset generation, training and evaluation. An allocation
-without an inner `srun` does not guarantee execution on a compute node.
+Run commands from `ELPIS/vision` in an environment with the required dependencies.
+Use a CUDA GPU for training and the smoke checks.
 
 ## 1. Environment
 
@@ -11,30 +9,19 @@ Validation used Python 3.10.14, PyTorch 2.4.0+cu121 and torchvision 0.19.0+cu121
 [requirements.txt](requirements.txt) records the observed non-PyTorch dependency
 versions. Fresh installation from these instructions has not yet been validated.
 
-To create a separate environment on this cluster, submit the installation inside
-a compute step as well. The following assumes conda is installed under `~/miniconda3`:
+For example, create a conda environment and install the observed versions:
 
 ```bash
-export ELPIS_VISION_ROOT="$PWD"
-salloc -p ws-ia -N 1 --cpus-per-task=4 \
-  --gres=gpu:nvidia-rtx-5000-ada-generation:1 --mem=32G \
-  srun bash -lc '
-    set -euo pipefail
-    source ~/miniconda3/etc/profile.d/conda.sh
-    conda create -y -n elpis python=3.10.14
-    conda activate elpis
-    cd "$ELPIS_VISION_ROOT"
-    python -m pip install torch==2.4.0 torchvision==0.19.0 \
-      --index-url https://download.pytorch.org/whl/cu121
-    python -m pip install -r requirements.txt
-  '
-export ELPIS_CONDA_ENV=elpis
+conda create -y -n elpis python=3.10.14
+conda activate elpis
+python -m pip install torch==2.4.0 torchvision==0.19.0 \
+  --index-url https://download.pytorch.org/whl/cu121
+python -m pip install -r requirements.txt
+export MPLBACKEND=Agg
 ```
 
-The existing validation environment is `xuanjie`, which is the submission wrapper's
-default. Override `ELPIS_CONDA_SH` if conda's activation script is elsewhere.
-The wrapper sets `MPLBACKEND=Agg` and disables Python bytecode output. W&B is disabled
-by default; online logging is optional and uses externally configured credentials.
+W&B is disabled by default; online logging is optional and uses externally
+configured credentials.
 
 ## 2. Data and assets
 
@@ -51,8 +38,15 @@ reproduction input; generation always writes to a new directory.
 - Blue-dot subtraction uses 152 training and 79 held-out pairs.
 - Icon images are generated online with the bundled emoji font.
 
-[The alignment asset manifest](reproduction/lm_align_assets.txt) lists DINO weights,
-the font and `dots_elpis/1/checkpoint_48000.pt`. Alignment first checks for that VQ
+On first use, the DINO loader downloads the official ViT-S/8 weights and caches
+them under the PyTorch Hub cache (`TORCH_HOME` controls its location). Subsequent
+runs reuse the cached file. For offline use, prepopulate the cache on a connected
+machine or call `load_dino_vit_s8(checkpoint_path=...)` with a local checkpoint.
+The official download URL and pinned SHA-256 prefix are in
+[`loader_dino.py`](LM_align/loader_dino.py).
+
+[The alignment asset manifest](reproduction/lm_align_assets.txt) lists
+the bundled font and `dots_elpis/1/checkpoint_48000.pt`. Alignment first checks for that VQ
 checkpoint under `VQ/exp/dots_elpis/1/`, then falls back to the bundled asset under
 `LM_align/checkpoints/vqsps/`. This is a fixed reference model, not an automatic
 selection from newly trained addition runs.
@@ -68,7 +62,7 @@ provides exact historical mappings.
 A check of one addition minibatch requires no trained checkpoint:
 
 ```bash
-sbatch common_gpu_py.sbatch VQ/batch_train.py dots_elpis --smoke-test
+python VQ/batch_train.py dots_elpis --smoke-test
 ```
 
 It runs the original loss, backward pass and Adam update, checks finite values and
@@ -83,7 +77,7 @@ A subtraction check needs addition repetition 1's selected checkpoint and traini
 record:
 
 ```bash
-sbatch common_gpu_py.sbatch VQ/batch_other_task_eval.py dots_elpis --smoke-test
+python VQ/batch_other_task_eval.py dots_elpis --smoke-test
 ```
 
 It performs one training and one evaluation minibatch in a temporary directory;
@@ -92,27 +86,24 @@ paper scores, convergence or the full repeated-run statistics.
 
 ## 4. Addition → subtraction → evaluation
 
-For one experiment group, use SLURM dependencies so downstream stages only start
-after successful completion:
+For one experiment group, run each stage after the preceding stage completes:
 
 ```bash
-train_job=$(sbatch --parsable common_gpu_py.sbatch VQ/batch_train.py dots_elpis)
-minus_job=$(sbatch --parsable --dependency="afterok:$train_job" \
-  common_gpu_py.sbatch VQ/batch_other_task_eval.py dots_elpis)
-sbatch --dependency="afterok:$minus_job" \
-  common_gpu_py.sbatch VQ/eval_pipeline.py dots_elpis
+python VQ/batch_train.py dots_elpis
+python VQ/batch_other_task_eval.py dots_elpis
+python VQ/eval_pipeline.py dots_elpis
 ```
 
 Each training command covers all 20 addition repetitions. Subtraction-head counts
-and schedules differ by family; see [EXPERIMENTS.md](EXPERIMENTS.md). To submit all
+and schedules differ by family; see [EXPERIMENTS.md](EXPERIMENTS.md). To run all
 retained groups, use `reproduction/runs.txt` as the list and apply the same three-stage
-sequence to each group. Use your site's job limits when deciding concurrency.
+sequence to each group. Choose concurrency to fit your available resources.
 
 You can pass multiple short names to the training, subtraction and evaluation
 entry points. VQ evaluation without names evaluates all 24 retained groups:
 
 ```bash
-sbatch common_gpu_py.sbatch VQ/eval_pipeline.py
+python VQ/eval_pipeline.py
 ```
 
 That command requires all configured inputs. A missing experiment's records or
@@ -172,24 +163,19 @@ or sampling definitions to resolve outstanding manuscript-protocol differences.
 
 ### Resources, runtime and resuming
 
-The wrapper requests one RTX 5000 Ada, four CPU cores, 32 GB RAM and a 20-hour walltime.
 Full training runs 20 repetitions sequentially; total runtime has not been measured
-for this release and completion within one allocation is not guaranteed. Inspect
-`slurm-<jobid>.out` and `.err`, and query jobs with `squeue -u "$USER"`.
+for this release.
 
 Re-running a training command uses the existing records/current model to resume.
 Addition and subtraction recreate their Adam optimizer, so this is not an exact
 optimizer/RNG-state continuation. Keep this limitation in mind when comparing
-interrupted and uninterrupted runs. Override resource directives with `sbatch`
-options as needed; do not run the project on the login node to work around limits.
+interrupted and uninterrupted runs.
 
 ## 5. Icon adaptation
 
 ```bash
-align_job=$(sbatch --parsable common_gpu_py.sbatch \
-  LM_align/batch_train.py icon_alignment)
-sbatch --dependency="afterok:$align_job" common_gpu_py.sbatch \
-  LM_align/statistic_batch.py icon_alignment
+python LM_align/batch_train.py icon_alignment
+python LM_align/statistic_batch.py icon_alignment
 ```
 
 Training produces, for each repetition under `LM_align/exp/icon_alignment/`,

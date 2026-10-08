@@ -5,7 +5,7 @@ the original fixed images and split membership retained from S3Plus, without
 regenerating or changing any training data. The archive is accompanied by
 `vision_data.zip.sha256`.
 
-The validated ZIP release is **38,104,912 bytes (38.10 MB)**. Its size includes ZIP
+The validated ZIP release is **38,104,876 bytes (38.10 MB)**. Its size includes ZIP
 headers for the many small files and the release manifests; the image payload alone
 is smaller, as listed below.
 
@@ -23,8 +23,7 @@ Place the ZIP and its checksum file alongside `vision/`, then from `vision/`:
 # Only needed when dataset/ is absent. Do not overwrite an existing data tree.
 test ! -e dataset && unzip -q ../vision_data.zip 'dataset/*' -d .
 
-# Submit verification through SLURM, including on the login node.
-sbatch common_gpu_py.sbatch reproduction/data_bundle.py verify
+python reproduction/data_bundle.py verify
 ```
 
 If `dataset/` is already present, skip extraction and run verification. Verification
@@ -34,8 +33,9 @@ files. Use the code and metadata from the same release as the archive.
 
 The archive contains `dataset/...`, `reproduction/datasets.txt`, and the metadata
 under `reproduction/data/`. It excludes model checkpoints, logs and generated
-training outputs. Icon fonts and DINO/VQ weights remain separate code-release assets
-listed in [lm_align_assets.txt](reproduction/lm_align_assets.txt).
+training outputs. The bundled icon font and VQ weights are listed in
+[lm_align_assets.txt](reproduction/lm_align_assets.txt). DINO weights are downloaded
+on first use and cached by PyTorch; see [REPRODUCING.md](REPRODUCING.md).
 
 ## Contents and split sizes
 
@@ -106,19 +106,18 @@ selects the historical border. The original dataset itself is untouched.
 
 ```bash
 # The output directory must not exist; dataset/ will not be changed.
-sbatch common_gpu_py.sbatch reproduction/data_bundle.py regenerate \
+python reproduction/data_bundle.py regenerate \
   --output /absolute/path/to/a/new/generated_dataset
 
-# After the generation job completes, compare training-visible pixels.
-sbatch common_gpu_py.sbatch reproduction/data_bundle.py verify \
+# After generation completes, compare training-visible pixels.
+python reproduction/data_bundle.py verify \
   --data-root /absolute/path/to/a/new/generated_dataset --pixels
 
 # Optional stronger check of the encoded PNG bytes, including metadata.
-sbatch common_gpu_py.sbatch reproduction/data_bundle.py verify \
+python reproduction/data_bundle.py verify \
   --data-root /absolute/path/to/a/new/generated_dataset
 ```
 
-All generation and Python verification commands must run inside a SLURM job step.
 The original broad `dataMaker_*` scripts contain historical main blocks for other
 experiments; use the documented wrapper instead of running those main blocks.
 Regeneration is supplemental: the original archive remains the authoritative
@@ -152,11 +151,11 @@ by `onlineGenDataset`. Keep this source, its dataset wrapper and the bundled
 For inspection or future independent evaluation, export a new reproducible sample:
 
 ```bash
-sbatch common_gpu_py.sbatch reproduction/generate_icon_data.py \
+python reproduction/generate_icon_data.py \
   --split seen --seed 20261008 --samples 256 \
   --output /absolute/path/to/a/new/icons_seen
 
-sbatch common_gpu_py.sbatch reproduction/generate_icon_data.py \
+python reproduction/generate_icon_data.py \
   --split unseen --seed 20261008 --samples 256 \
   --output /absolute/path/to/a/new/icons_unseen
 ```
@@ -177,7 +176,7 @@ exports. No historical training/evaluation protocol is changed by packaging them
 Only package a dataset that passes the original byte-level manifest:
 
 ```bash
-sbatch common_gpu_py.sbatch reproduction/data_bundle.py pack \
+python reproduction/data_bundle.py pack \
   --output /absolute/path/to/a/new/vision_data.zip
 ```
 

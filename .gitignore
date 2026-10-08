@@ -1,0 +1,28 @@
+# Private manuscripts, internal notes and local recovery backups.
+/temp/
+
+# Local assistant and editor state.
+.codex/
+.copilot/
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Python caches and local environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local secrets and runtime logs.
+.env
+.env.*
+!.env.example
+slurm-*.out
+slurm-*.err
+wandb/
+
+# Distribute the data ZIP as a release asset; keep its checksum in Git.
+/vision_data.zip
