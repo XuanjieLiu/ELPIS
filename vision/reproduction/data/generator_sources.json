@@ -1,0 +1,9 @@
+{
+  "LM_align/synthData/SynthCommon_win.py": "cca06771190da57f1c3d2cfb1e13147b35d58b980dc141e10122fe7b8748d596",
+  "LM_align/synthData/SynthImgsDataset.py": "af2761ca591f7b9432bbfffc7dc812affc1245dcbefc67bfa01cded687da6f56",
+  "LM_align/synthData/fonts/seguiemj.ttf": "12c5253251f45c57fa57e2a1c748f821d3ca030a3e757e049a5da6316f213bcb",
+  "VQ/common_func.py": "e6b2de51a1cdcc09f613ede80762fae4f809dd7112dff2748b075926a43297e3",
+  "dataMaker_commonFunc.py": "292eabac05b6a2ad942fe6a5c8b83890b09eb686d4ddb8ea5e80a8cabb4f4304",
+  "reproduction/data_bundle.py": "eea01eb1d074a7eca634213a3c3d52b9e0e1226c9e17b43f4b4396d56d8df272",
+  "reproduction/generate_icon_data.py": "32dfbb57ec403402424ace53f3f87e0641edd352ea9843bc1a6bebc51ce6a9ef"
+}

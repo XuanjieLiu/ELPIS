@@ -1,0 +1,8 @@
+eastern_tally_elpis
+western_tally_elpis
+multistyle_elpis
+multistyle_full_data
+dots_elpis
+dots_full_data
+blurred_dots_elpis
+blurred_dots_full_data

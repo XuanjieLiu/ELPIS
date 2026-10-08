@@ -1,0 +1,14 @@
+(0,20)-FixedPos-oneStyle
+(0,20)-FixedPos-oneStyle_EU_tally
+(0,20)-FixedPos-oneStyle_ZHENG
+multi_style_(4,4)_realPairs_plus(0,20)
+multi_style_(4,4)_realPairs_plus(0,20)_trainAll
+multi_style_eval_(0,20)_FixedPos_TrainStyle
+multi_style_pairs_minus(0,20)
+single_style_pairs(0,20)_tripleSet
+single_style_pairs(0,20)_tripleSet_EU_tally
+single_style_pairs(0,20)_tripleSet_ZHENG
+single_style_pairs(0,20)_tripleSet_trainAll
+single_style_pairs_minus(0,20)
+single_style_pairs_minus(0,20)_EU_tally
+single_style_pairs_minus(0,20)_ZHENG

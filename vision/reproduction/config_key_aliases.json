@@ -1,0 +1,22 @@
+{
+  "common": {
+    "embeddings_num": "codebook_size",
+    "latent_embedding_1": "num_content_groups",
+    "latent_code_1": "content_dim",
+    "latent_code_2": "style_dim",
+    "plus_recon_loss_scalar": "operator_image_weight",
+    "z_plus_loss_scalar": "operator_latent_weight",
+    "associative_z_loss_scalar": "symmetry_weight",
+    "VQPlus_eqLoss_scalar": "operator_vq_weight",
+    "max_iter_num": "num_epochs"
+  },
+  "train": {
+    "num_sub_exp": "num_repeats"
+  },
+  "other": {
+    "num_sub_exp": "num_heads_per_model"
+  },
+  "align": {
+    "num_sub_exp": "num_repeats"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "original": {
+    "mode": "PNG bytes",
+    "expected_files": 46155,
+    "present_files": 46155,
+    "missing_count": 0,
+    "extra_count": 0,
+    "mismatch_count": 0,
+    "missing_examples": [],
+    "extra_examples": [],
+    "mismatch_examples": [],
+    "passed": true
+  },
+  "regenerated_bytes": {
+    "mode": "PNG bytes",
+    "expected_files": 46155,
+    "present_files": 46155,
+    "missing_count": 0,
+    "extra_count": 0,
+    "mismatch_count": 46155,
+    "missing_examples": [],
+    "extra_examples": [],
+    "mismatch_examples": [
+      "(0,20)-FixedPos-oneStyle/0-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/1-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/10-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/11-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/12-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/13-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/14-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/15-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/16-circle-blue.png",
+      "(0,20)-FixedPos-oneStyle/17-circle-blue.png"
+    ],
+    "passed": false
+  },
+  "regenerated_rgb": {
+    "mode": "RGB pixels",
+    "expected_files": 46155,
+    "present_files": 46155,
+    "missing_count": 0,
+    "extra_count": 0,
+    "mismatch_count": 0,
+    "missing_examples": [],
+    "extra_examples": [],
+    "mismatch_examples": [],
+    "passed": true
+  },
+  "generation_slurm_job": "222522",
+  "icon_slurm_job": "222517",
+  "packaging_slurm_job": "222528",
+  "python": "3.10.14",
+  "matplotlib": "3.9.2",
+  "pillow": "10.2.0",
+  "note": "PNG byte differences from regeneration are permitted only for the optional redraw; the ZIP contains the original byte-verified images."
+}

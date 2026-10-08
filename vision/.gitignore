@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+slurm-*.out
+slurm-*.err
+/VQ/exp/*/[0-9]*/
+/VQ/exp/*/PIPELINE_EVAL/
+/LM_align/exp/*/[0-9]*/
+/LM_align/exp/*/all_results*.json
+/LM_align/exp/*/wandb/
+/wandb/

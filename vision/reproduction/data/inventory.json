@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "total_files": 46155,
+  "total_bytes": 27382562,
+  "datasets": {
+    "(0,20)-FixedPos-oneStyle": {
+      "files": 21,
+      "bytes": 12714,
+      "samples": {
+        "images": 21
+      },
+      "formats": {
+        "RGBA:64x64": 21
+      }
+    },
+    "(0,20)-FixedPos-oneStyle_EU_tally": {
+      "files": 21,
+      "bytes": 14092,
+      "samples": {
+        "images": 21
+      },
+      "formats": {
+        "RGBA:64x64": 21
+      }
+    },
+    "(0,20)-FixedPos-oneStyle_ZHENG": {
+      "files": 21,
+      "bytes": 10632,
+      "samples": {
+        "images": 21
+      },
+      "formats": {
+        "RGBA:64x64": 21
+      }
+    },
+    "multi_style_(4,4)_realPairs_plus(0,20)": {
+      "files": 11088,
+      "bytes": 6645603,
+      "samples": {
+        "test": 2384,
+        "train": 1312
+      },
+      "formats": {
+        "RGBA:64x64": 11088
+      }
+    },
+    "multi_style_(4,4)_realPairs_plus(0,20)_trainAll": {
+      "files": 18240,
+      "bytes": 10969595,
+      "samples": {
+        "test": 2384,
+        "train": 3696
+      },
+      "formats": {
+        "RGBA:64x64": 18240
+      }
+    },
+    "multi_style_eval_(0,20)_FixedPos_TrainStyle": {
+      "files": 336,
+      "bytes": 204941,
+      "samples": {
+        "images": 336
+      },
+      "formats": {
+        "RGBA:64x64": 336
+      }
+    },
+    "multi_style_pairs_minus(0,20)": {
+      "files": 11088,
+      "bytes": 6433955,
+      "samples": {
+        "test": 1264,
+        "train": 2432
+      },
+      "formats": {
+        "RGBA:64x64": 11088
+      }
+    },
+    "single_style_pairs(0,20)_tripleSet": {
+      "files": 693,
+      "bytes": 412826,
+      "samples": {
+        "test_1": 101,
+        "test_2": 62,
+        "train": 68
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    },
+    "single_style_pairs(0,20)_tripleSet_EU_tally": {
+      "files": 693,
+      "bytes": 437371,
+      "samples": {
+        "test_1": 101,
+        "test_2": 62,
+        "train": 68
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    },
+    "single_style_pairs(0,20)_tripleSet_ZHENG": {
+      "files": 693,
+      "bytes": 342592,
+      "samples": {
+        "test_1": 101,
+        "test_2": 62,
+        "train": 68
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    },
+    "single_style_pairs(0,20)_tripleSet_trainAll": {
+      "files": 1182,
+      "bytes": 705452,
+      "samples": {
+        "test_1": 101,
+        "test_2": 62,
+        "train": 231
+      },
+      "formats": {
+        "RGBA:64x64": 1182
+      }
+    },
+    "single_style_pairs_minus(0,20)": {
+      "files": 693,
+      "bytes": 412826,
+      "samples": {
+        "test": 79,
+        "train": 152
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    },
+    "single_style_pairs_minus(0,20)_EU_tally": {
+      "files": 693,
+      "bytes": 437371,
+      "samples": {
+        "test": 79,
+        "train": 152
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    },
+    "single_style_pairs_minus(0,20)_ZHENG": {
+      "files": 693,
+      "bytes": 342592,
+      "samples": {
+        "test": 79,
+        "train": 152
+      },
+      "formats": {
+        "RGBA:64x64": 693
+      }
+    }
+  }
+}
