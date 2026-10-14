@@ -12,7 +12,7 @@ representation learning.
 
 Start with the [reproduction guide](vision/REPRODUCING.md) for environment setup,
 training and evaluation. The [experiment table](vision/EXPERIMENTS.md) maps the
-retained configurations to paper experiments and describes coverage limitations.
+42 visual experiment configurations to the paper figures.
 The [data guide](vision/DATA.md) covers the image archive, checksums, fixed splits
 and optional data generation.
 
@@ -23,8 +23,7 @@ cd vision
 python VQ/batch_train.py dots_elpis --smoke-test
 ```
 
-Full training and evaluation commands are documented
-in the reproduction guide. Historical training outputs are not bundled.
+Full training and evaluation commands are documented in the reproduction guide.
 
 ## Music experiments
 
@@ -34,7 +33,5 @@ Run music commands with `music/` as the working directory. Training starts at
 [`run_evaluation.py`](music/run_evaluation.py) and requires a trained checkpoint.
 Additional configurations and instructions are under [`experiments/`](music/experiments/).
 
-The music code has been imported but has not yet been validated in this repository.
-WAV datasets are not included. Before running, prepare the data and dependencies
-and update the selected configuration's data paths. A paper-to-experiment mapping
-for music is still pending.
+Prepare the music data and dependencies, then set the data paths in the selected
+configuration. WAV datasets are not included in the repository.

@@ -1,4 +1,6 @@
-# Other Runs
+# Additional music experiments
 
-This directory holds older loose scripts/results that are not part of the
-transition/inducement split.
+- [Scripts](scripts/): training and evaluation commands.
+- [Results](results/): experiment outputs.
+
+Run commands from `ELPIS/music`.

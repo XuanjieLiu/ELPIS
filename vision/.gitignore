@@ -5,6 +5,7 @@ slurm-*.out
 slurm-*.err
 /VQ/exp/*/[0-9]*/
 /VQ/exp/*/PIPELINE_EVAL/
+/VQ/exp/*/statistic_*.txt
 /LM_align/exp/*/[0-9]*/
 /LM_align/exp/*/all_results*.json
 /LM_align/exp/*/wandb/

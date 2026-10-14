@@ -1,14 +1,11 @@
-# Transition Experiments
+# Transition experiments
 
-This is the current approach.
+- [Training scripts](scripts/train/)
+- [Evaluation and probing scripts](scripts/eval/)
+- [Plotting script](plots/plot_transition_final_1119.py)
+- [Figures and source CSVs](results/final_1119/)
+- [Additional results](results/archive/)
+- [Model and configurations](../../model/transition/)
 
-- `scripts/train/`: transition training launch scripts.
-- `scripts/eval/`: transition evaluation and probing scripts.
-- `plots/plot_transition_final_1119.py`: final plotting script for the `1119` figures.
-- `results/final_1119/`: final plot outputs and source CSVs.
-- `results/archive/`: older transition CSVs and plots.
-- `logs/`: moved transition checkpoints and logs.
-
-Transition method code and config live in `model/transition/`.
-
-Run commands from the repository root.
+The training and evaluation entry points select this method when the configuration
+uses `method: "ISymm_Transition"`. Run commands from `ELPIS/music`.

@@ -1,47 +1,31 @@
+import argparse
+from pathlib import Path
 import sys
 import os
 sys.path.append('{}{}'.format(os.path.dirname(os.path.abspath(__file__)), '/../'))
 from importlib import reload
 from common_func import load_config_from_exp_name, EXP_ROOT, record_num_list, find_optimal_checkpoint_num_by_train_config
+from experiment_registry import resolve_experiment_name
 from loss_counter import read_record
 from dataloader_plus import MultiImgDataset
 
 
 EXP_NUM_LIST = [str(i) for i in range(1, 21)]
-EXP_NAME_LIST = [
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.1",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.2",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.3",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.4",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.5",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.6",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.7",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.8",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_Nothing_train0.9",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.1",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.2",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.3",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.4",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.5",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.6",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.7",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.8",
-    "2025.10.05_10vq_Zc[2]_Zs[0]_edim1_[0-20]_plus1024_1_tripleSet_symm_train0.9",
-
-]
+EXP_NAME_LIST = (Path(__file__).resolve().parents[1] / 'reproduction/fig2b_runs.txt').read_text().splitlines()
 EVAL_RECORD_NAME = 'plus_eval.txt'
 
-EVAL_KEYS = ['eval_emb_select_accu', 'eval_emb_select_accu_cycle', 'eval_one2n_accu', 
+EVAL_KEYS = ['eval_emb_select_accu', 'eval_emb_select_accu_cycle', 'eval_one2n_accu',
              'eval_one2n_accu_cycle', 'eval_one2one_accu', 'eval_one2one_accu_cycle']
 
 # EVAL_KEYS = ['train_accu', 'eval_accu', 'eval_accu_2']
 
 
-def batch_statistic():
+def batch_statistic(exp_names=None):
     is_summary_two_eval = 'eval_accu_2' in EVAL_KEYS and 'eval_accu' in EVAL_KEYS
     if is_summary_two_eval:
         EVAL_KEYS.append('eval_accu_all')
-    for exp_name in EXP_NAME_LIST:
+    for name in (EXP_NAME_LIST if exp_names is None else exp_names):
+        exp_name = resolve_experiment_name(name)
         record_lists = [[] for _ in range(len(EVAL_KEYS))]
         exp_path = os.path.join(EXP_ROOT, exp_name)
         config = load_config_from_exp_name(exp_name)
@@ -73,5 +57,8 @@ def batch_statistic():
 
 
 if __name__ == "__main__":
-    batch_statistic()
+    parser = argparse.ArgumentParser(description='Summarize Fig. 2B training-ratio experiments.')
+    parser.add_argument('run_names', nargs='*', help='Default: all 18 Fig. 2B groups.')
+    args = parser.parse_args()
+    batch_statistic(args.run_names or None)
 

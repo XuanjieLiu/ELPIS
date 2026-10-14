@@ -5,11 +5,11 @@ Use a CUDA GPU for training and the smoke checks.
 
 ## 1. Environment
 
-Validation used Python 3.10.14, PyTorch 2.4.0+cu121 and torchvision 0.19.0+cu121.
-[requirements.txt](requirements.txt) records the observed non-PyTorch dependency
-versions. Fresh installation from these instructions has not yet been validated.
+The reference environment uses Python 3.10.14, PyTorch 2.4.0+cu121 and
+torchvision 0.19.0+cu121. Additional dependencies are listed in
+[requirements.txt](requirements.txt).
 
-For example, create a conda environment and install the observed versions:
+Create a conda environment and install the dependencies:
 
 ```bash
 conda create -y -n elpis python=3.10.14
@@ -26,14 +26,14 @@ configured credentials.
 ## 2. Data and assets
 
 The [dataset manifest](reproduction/datasets.txt) lists the 14 included directories.
-Paths are derived from each configuration's location. No access to S3Plus is required.
+Paths are derived from each configuration's location.
 For the downloadable `vision_data.zip`, integrity verification and optional
 regeneration, follow [DATA.md](DATA.md). The packaged original files are the default
 reproduction input; generation always writes to a new directory.
 
 - Fixed blue-dot addition uses 68 training pairs and 101+62 held-out pairs. The
-  full-data ceiling trains on all 231 pairs; its interpolation queries retain the
-  historical fixed-training-set definition.
+  full-data ceiling trains on all 231 pairs. Interpolation queries use the fixed
+  68-pair training subset.
 - Tally and multi-style datasets are included. Gaussian blur is applied online.
 - Blue-dot subtraction uses 152 training and 79 held-out pairs.
 - Icon images are generated online with the bundled emoji font.
@@ -45,17 +45,26 @@ machine or call `load_dino_vit_s8(checkpoint_path=...)` with a local checkpoint.
 The official download URL and pinned SHA-256 prefix are in
 [`loader_dino.py`](LM_align/loader_dino.py).
 
-[The alignment asset manifest](reproduction/lm_align_assets.txt) lists
-the bundled font and `dots_elpis/1/checkpoint_48000.pt`. Alignment first checks for that VQ
-checkpoint under `VQ/exp/dots_elpis/1/`, then falls back to the bundled asset under
-`LM_align/checkpoints/vqsps/`. This is a fixed reference model, not an automatic
-selection from newly trained addition runs.
+For icon alignment, choose a best-performing checkpoint from any repetition of
+a trained addition experiment. In
+[`LM_align/exp/icon_alignment/config.py`](LM_align/exp/icon_alignment/config.py),
+set `VQSPS.EXP_NAME` to the experiment name and `VQSPS.CHECK_POINT_NAME` to
+`<repetition>/checkpoint_<epoch>.pt`. For example:
 
-The clean `VQ/exp` directories contain configurations only. Complete trained VQ
-groups and subtraction logs are not bundled. Either train them or place archived
-checkpoints and records under the mapped canonical directory, preserving repetition
-numbers and filenames. The [alias registry](reproduction/experiment_aliases.json)
-provides exact historical mappings.
+```python
+'VQSPS': {
+    'EXP_NAME': 'dots_elpis',
+    'CHECK_POINT_NAME': '1/checkpoint_48000.pt',
+},
+```
+
+The example reads `VQ/exp/dots_elpis/1/checkpoint_48000.pt`. A pretrained example
+and the icon font are included in the [asset manifest](reproduction/lm_align_assets.txt).
+
+The `VQ/exp` directories contain experiment configurations. Training creates the
+checkpoints and records used by evaluation. To evaluate existing trained models,
+place their checkpoints and records under `VQ/exp/<experiment>/<repetition>/`
+using the filenames shown below.
 
 ## 3. Fast execution checks
 
@@ -65,7 +74,7 @@ A check of one addition minibatch requires no trained checkpoint:
 python VQ/batch_train.py dots_elpis --smoke-test
 ```
 
-It runs the original loss, backward pass and Adam update, checks finite values and
+It runs one loss calculation, backward pass and Adam update, checks finite values and
 changed parameters, and removes its temporary outputs. To check all eight dataset
 representatives:
 
@@ -81,8 +90,7 @@ python VQ/batch_other_task_eval.py dots_elpis --smoke-test
 ```
 
 It performs one training and one evaluation minibatch in a temporary directory;
-the supplied pretrained inputs are retained. These checks do not reproduce final
-paper scores, convergence or the full repeated-run statistics.
+the supplied pretrained inputs are retained.
 
 ## 4. Addition → subtraction → evaluation
 
@@ -95,19 +103,42 @@ python VQ/eval_pipeline.py dots_elpis
 ```
 
 Each training command covers all 20 addition repetitions. Subtraction-head counts
-and schedules differ by family; see [EXPERIMENTS.md](EXPERIMENTS.md). To run all
-retained groups, use `reproduction/runs.txt` as the list and apply the same three-stage
-sequence to each group. Choose concurrency to fit your available resources.
+and schedules differ by family; see [EXPERIMENTS.md](EXPERIMENTS.md). For the 24 fixed-split groups, use
+`reproduction/pipeline_runs.txt` and apply this three-stage sequence to each group.
+The complete list of 42 groups is in `reproduction/runs.txt`. Choose concurrency to fit your available resources.
 
 You can pass multiple short names to the training, subtraction and evaluation
-entry points. VQ evaluation without names evaluates all 24 retained groups:
+entry points. VQ evaluation without names evaluates the 24 fixed-split groups:
 
 ```bash
 python VQ/eval_pipeline.py
 ```
 
-That command requires all configured inputs. A missing experiment's records or
-checkpoint cause failure rather than being silently excluded from the statistics.
+Prepare each group's trained checkpoints and subtraction records before running
+the full pipeline.
+
+### Fig. 2B: training-ratio sweep
+
+Train the 18 groups listed in `reproduction/fig2b_runs.txt`:
+
+```bash
+while IFS= read -r run; do
+    python VQ/batch_train.py "$run"
+done < reproduction/fig2b_runs.txt
+python VQ/statistic_batch.py
+```
+
+For a single group:
+
+```bash
+python VQ/batch_train.py dots_elpis_train_10pct
+python VQ/statistic_batch.py dots_elpis_train_10pct
+```
+
+Each repetition trains on a random subset of the 231 addition triplets and
+records held-out metrics in `plus_eval.txt`. Statistics use those records at
+the selected checkpoint and write `statistic_<metric>.txt` under each group.
+See [the experiment table](EXPERIMENTS.md#fig-2b-training-ratio-sweep) for the ratios.
 
 ### Inputs, checkpoint selection and outputs
 
@@ -139,12 +170,12 @@ Additional training plots and records are written under each repetition.
 
 The pipeline chooses checkpoints using
 `eval_config.optimal_checkpoint_finding_config` in `train_config.py`. Subtraction
-uses its own selection config, or the historical defaults. A repetition-local
+uses its own selection config, or the defaults in `VQ/common_func.py`. A repetition-local
 `specific_checkpoint.txt` overrides selection and contains an integer epoch number.
 Thus checkpoints may differ between pipeline and subtraction unless deliberately
 specified. Keep `Train_record.txt` when distributing selected checkpoints.
 
-Output metric names retain the historical schema:
+Output metric names and definitions:
 
 | Output key pattern | Actual computation |
 | --- | --- |
@@ -158,18 +189,13 @@ Output metric names retain the historical schema:
 
 Prefixes come from the config's evaluation `name` values. Keys containing `cycle`
 use decode–encode predictions. Keep these variants distinct when comparing results.
-This naming release preserves the historical evaluator; it does not change HM/DM
-or sampling definitions to resolve outstanding manuscript-protocol differences.
 
-### Resources, runtime and resuming
+### Runtime and resuming
 
-Full training runs 20 repetitions sequentially; total runtime has not been measured
-for this release.
+Full training runs 20 repetitions sequentially.
 
 Re-running a training command uses the existing records/current model to resume.
-Addition and subtraction recreate their Adam optimizer, so this is not an exact
-optimizer/RNG-state continuation. Keep this limitation in mind when comparing
-interrupted and uninterrupted runs.
+Addition and subtraction recreate their Adam optimizer when resuming.
 
 ## 5. Icon adaptation
 
@@ -185,19 +211,10 @@ It uses 20 repetitions and 30 epochs with online training/seen/unseen icon image
 `statistic_batch.py` reads these three records at the epoch with the highest training
 accuracy (excluding epoch 0). It writes `all_results.json`,
 `all_results_summary.json` and `all_results_details.json` at the group root.
-It does not load a checkpoint or perform fresh inference. It currently summarizes
-all 20 repetitions, without the manuscript's converged-run filtering.
+It summarizes all 20 repetitions from their recorded metrics.
 
-## 6. Expected results and verification scope
+## 6. Checking execution
 
 Successful smoke checks print `SMOKE PASS` and leave no training artifacts.
-Previous full evaluation of `dots_full_data` matched all 360 historical values
-(18 metrics × 20 repetitions) exactly. The [validation record](reproduction/validation.md)
-summarizes that check and the naming-refactor checks.
-
-These execution/regression checks are distinct from reproducing the paper's final
-numbers by retraining. New training trajectories are stochastic and original
-initialization seeds were not recorded in the retained configs. Final paper plots,
-the training-ratio sweep and random baselines still need the work identified in
-[the experiment coverage table](EXPERIMENTS.md). Do not infer an exact expected score
-from an unrelated metric key or from a one-step run.
+Full evaluation writes per-repetition metrics, aggregate statistics and selected
+checkpoint filenames to the experiment's `PIPELINE_EVAL/` directory.

@@ -1,11 +1,10 @@
-# Inducement Experiments
+# Inducement experiments
 
-This is the older inducement result path, kept parallel to transition.
+- [Training scripts](scripts/train/)
+- [Evaluation scripts](scripts/eval/)
+- [Results](results/): CSV files and figures.
+- [Notebooks](notebooks/): experiment analysis.
+- [Model and configurations](../../model/inducement/)
 
-- `scripts/`: old train/eval shell scripts.
-- `results/`: old CSV and figure outputs.
-- `logs/`: old inducement checkpoints and logs.
-- `notebooks/`: old inducement notebooks.
-
-Inducement method code and config live in `model/inducement/`. The shared
-entrypoints still import that code when a config uses `method: "ISymm_Induced"`.
+The training and evaluation entry points select this method when the configuration
+uses `method: "ISymm_Induced"`. Run commands from `ELPIS/music`.

@@ -1,8 +1,8 @@
-# Final Transition Result: 1119
+# Transition figures and source data
 
-This directory contains the final transition figures used for the project.
+- [Figures](figures/): plots of transition performance.
+- [Source CSVs](source_csv/): inputs to the plotting script.
 
-- `figures/`: final `1119` PNG outputs.
-- `source_csv/`: CSV inputs used by the final plotting script.
-
-The plotting script is `experiments/transition/plots/plot_transition_final_1119.py`.
+Generate plots with
+[`plot_transition_final_1119.py`](../../plots/plot_transition_final_1119.py),
+running from `ELPIS/music`.
